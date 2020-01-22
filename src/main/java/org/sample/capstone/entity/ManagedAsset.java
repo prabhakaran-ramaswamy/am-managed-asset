@@ -8,15 +8,22 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 
+
 @Entity
-@Table(name = "MANAGED_ASSERT")
-public class ManagedAssert {
+@Table(name = "MANAGED_ASSET")
+public class ManagedAsset {
 
     @Id
-    @SequenceGenerator(name = "managedAssertGen", sequenceName = "MANAGED_ASSERT_SEQ")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "managedAssertGen")
-    @Column(name = "MANAGED_ASSERT_ID")
+    @SequenceGenerator(name = "managedAssetGen", sequenceName = "MANAGED_ASSET_SEQ")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "managedAssetGen")
+    @Column(name = "MANAGED_ASSET_ID")
     private Long id;
+
+    @Column(name="ASSET_ID")
+    private AssetDetail asset;
+    
+    @Column(name="ACCOUNT_ID")
+    private Account account;
 
 	public Long getId() {
 		return id;

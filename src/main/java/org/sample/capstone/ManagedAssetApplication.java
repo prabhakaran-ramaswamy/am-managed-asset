@@ -4,13 +4,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * = ManagedAssertApplication
+ * = ManagedAssetApplication
  *
  * TODO Auto-generated class documentation
  *
  */
 @SpringBootApplication
-public class ManagedAssertApplication {
+public class ManagedAssetApplication {
 
     /**
      * TODO Auto-generated method documentation
@@ -18,6 +18,6 @@ public class ManagedAssertApplication {
      * @param args
      */
     public static void main(String[] args) {
-        SpringApplication.run(ManagedAssertApplication.class, args);
+        SpringApplication.run(ManagedAssetApplication.class, args);
     }
 }

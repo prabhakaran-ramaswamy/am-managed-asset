@@ -10,9 +10,9 @@
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>org.sample.capstone</groupId>
-	<artifactId>am-managed-assert</artifactId>
+	<artifactId>am-managed-asset</artifactId>
 	<version>1.0.0.BUILD-SNAPSHOT</version>
-	<name>am-managed-assert</name>
+	<name>am-managed-asset</name>
 	<properties>
 		<java.version>1.8</java.version>
 		<spring-cloud.version>Finchley.RELEASE</spring-cloud.version>

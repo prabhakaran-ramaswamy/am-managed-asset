@@ -1,12 +1,17 @@
 package org.sample.capstone.entity;
+
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
-import javax.persistence.Version;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
@@ -14,31 +19,35 @@ import javax.validation.constraints.Size;
 @Table(name = "account_detail")
 public class Account {
 
-    @Id
-    @SequenceGenerator(name = "accountGen", sequenceName = "ACCOUNT_SEQ")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accountGen")
-    @Column(name = "ACCOUNT_ID")
-    private Long id;
+	@Id
+	@SequenceGenerator(name = "accountGen", sequenceName = "ACCOUNT_SEQ")
+	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accountGen")
+	@Column(name = "ACCOUNT_ID")
+	private Long id;
 
-    @NotNull
-    @Column(name = "FIRST_NAME")
-    @Size(min = 3, max = 30)
-    private String firstName;
+	@NotNull
+	@Column(name = "FIRST_NAME")
+	@Size(min = 3, max = 30)
+	private String firstName;
 
-    @NotNull
-    @Column(name = "LAST_NAME")
-    @Size(min = 3, max = 30)
-    private String lastName;
+	@NotNull
+	@Column(name = "LAST_NAME")
+	@Size(min = 3, max = 30)
+	private String lastName;
 
-    @NotNull
-    @Column(name = "EMAIL")
-    @Size(min = 3, max = 30)
-    private String email;
+	@NotNull
+	@Column(name = "EMAIL")
+	@Size(min = 3, max = 30)
+	private String email;
 
-    @NotNull
-    @Column(name = "MOBILE")
-    @Size(min = 2, max = 5)
-    private String mobile;
+	@NotNull
+	@Column(name = "MOBILE")
+	@Size(min = 2, max = 5)
+	private String mobile;
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "ASSET_ID")
+	private Set<ManagedAsset> managedAssets;
 
 	public Long getId() {
 		return id;
@@ -47,7 +56,6 @@ public class Account {
 	public void setId(Long id) {
 		this.id = id;
 	}
-
 
 	public String getFirstName() {
 		return firstName;
@@ -79,6 +87,14 @@ public class Account {
 
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	public Set<ManagedAsset> getManagedAssets() {
+		return managedAssets;
+	}
+
+	public void setManagedAssets(Set<ManagedAsset> managedAssets) {
+		this.managedAssets = managedAssets;
 	}
 
 	@Override

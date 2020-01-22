@@ -3,8 +3,8 @@ import java.util.Collection;
 
 import javax.validation.Valid;
 
-import org.sample.capstone.entity.ManagedAssert;
-import org.sample.capstone.service.api.ManagedAssertService;
+import org.sample.capstone.entity.ManagedAsset;
+import org.sample.capstone.service.api.ManagedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,65 +25,65 @@ import org.springframework.web.util.UriComponents;
 
 
 @RestController
-@RequestMapping(value = "/managedasserts", name = "ManagedAssertsCollectionJsonController", produces = MediaType.APPLICATION_JSON_VALUE)
-public class ManagedAssertsCollectionJsonController {
+@RequestMapping(value = "/managedassets", name = "ManagedAssetsCollectionJsonController", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ManagedAssetsCollectionJsonController {
 
     @Autowired
-    private ManagedAssertService managedAssertService;
+    private ManagedAssetService managedAssetService;
 
    
     @GetMapping(name = "list")
-    public ResponseEntity<Page<ManagedAssert>> list(Pageable pageable) {
-        Page<ManagedAssert> managedAsserts = managedAssertService.findAll(pageable);
-        return ResponseEntity.ok(managedAsserts);
+    public ResponseEntity<Page<ManagedAsset>> list(Pageable pageable) {
+        Page<ManagedAsset> managedAssets = managedAssetService.findAll(pageable);
+        return ResponseEntity.ok(managedAssets);
     }
 
     public static UriComponents listURI() {
-        return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(ManagedAssertsCollectionJsonController.class).list(null)).build().encode();
+        return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(ManagedAssetsCollectionJsonController.class).list(null)).build().encode();
     }
 
     @PostMapping(name = "create")
-    public ResponseEntity<?> create(@Valid @RequestBody ManagedAssert managedAssert, BindingResult result) {
-        if (managedAssert.getId() != null) {
+    public ResponseEntity<?> create(@Valid @RequestBody ManagedAsset managedAsset, BindingResult result) {
+        if (managedAsset.getId() != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        ManagedAssert newManagedAssert = managedAssertService.save(managedAssert);
-        UriComponents showURI = ManagedAssertsItemJsonController.showURI(newManagedAssert);
+        ManagedAsset newManagedAsset = managedAssetService.save(managedAsset);
+        UriComponents showURI = ManagedAssetsItemJsonController.showURI(newManagedAsset);
         return ResponseEntity.created(showURI.toUri()).build();
     }
 
     /**
      * TODO Auto-generated method documentation
      *
-     * @param managedAsserts
+     * @param managedAssets
      * @param result
      * @return ResponseEntity
      */
     @PostMapping(value = "/batch", name = "createBatch")
-    public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAssert> managedAsserts, BindingResult result) {
+    public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        managedAssertService.save(managedAsserts);
+        managedAssetService.save(managedAssets);
         return ResponseEntity.created(listURI().toUri()).build();
     }
 
     /**
      * TODO Auto-generated method documentation
      *
-     * @param managedAsserts
+     * @param managedAssets
      * @param result
      * @return ResponseEntity
      */
     @PutMapping(value = "/batch", name = "updateBatch")
-    public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAssert> managedAsserts, BindingResult result) {
+    public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        managedAssertService.save(managedAsserts);
+        managedAssetService.save(managedAssets);
         return ResponseEntity.ok().build();
     }
 
@@ -95,7 +95,7 @@ public class ManagedAssertsCollectionJsonController {
      */
     @DeleteMapping(value = "/batch/{ids}", name = "deleteBatch")
     public ResponseEntity<?> deleteBatch(@PathVariable("ids") Collection<Long> ids) {
-        managedAssertService.delete(ids);
+        managedAssetService.delete(ids);
         return ResponseEntity.ok().build();
     }
 }

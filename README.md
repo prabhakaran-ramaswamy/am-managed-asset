@@ -1,1 +1,1 @@
-# am-managed-assert
+# am-managed-asset
