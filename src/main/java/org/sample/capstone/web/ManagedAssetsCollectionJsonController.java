@@ -55,13 +55,6 @@ public class ManagedAssetsCollectionJsonController {
         return ResponseEntity.created(showURI.toUri()).build();
     }
 
-    /**
-     * TODO Auto-generated method documentation
-     *
-     * @param managedAssets
-     * @param result
-     * @return ResponseEntity
-     */
     @PostMapping(value = "/batch", name = "createBatch")
     public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
@@ -71,13 +64,6 @@ public class ManagedAssetsCollectionJsonController {
         return ResponseEntity.created(listURI().toUri()).build();
     }
 
-    /**
-     * TODO Auto-generated method documentation
-     *
-     * @param managedAssets
-     * @param result
-     * @return ResponseEntity
-     */
     @PutMapping(value = "/batch", name = "updateBatch")
     public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
@@ -87,12 +73,6 @@ public class ManagedAssetsCollectionJsonController {
         return ResponseEntity.ok().build();
     }
 
-    /**
-     * TODO Auto-generated method documentation
-     *
-     * @param ids
-     * @return ResponseEntity
-     */
     @DeleteMapping(value = "/batch/{ids}", name = "deleteBatch")
     public ResponseEntity<?> deleteBatch(@PathVariable("ids") Collection<Long> ids) {
         managedAssetService.delete(ids);
