@@ -1,12 +1,17 @@
 package org.sample.capstone.service.impl;
 import java.util.List;
 
+import org.sample.capstone.entity.Account;
+import org.sample.capstone.entity.AssetDetail;
 import org.sample.capstone.entity.ManagedAsset;
+import org.sample.capstone.proxy.AccountsProxy;
+import org.sample.capstone.proxy.AssetsProxy;
 import org.sample.capstone.repository.ManagedAssetRepository;
 import org.sample.capstone.service.api.ManagedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,7 +23,12 @@ public class ManagedAssetServiceImpl implements ManagedAssetService {
     @Autowired
     private ManagedAssetRepository managedAssetRepository;
 
-
+    @Autowired
+    private AccountsProxy accountsProxy;
+    
+    @Autowired
+    private AssetsProxy assetsProxy;
+    
     @Transactional
     public void delete(ManagedAsset managedAsset) {
         managedAssetRepository.delete(managedAsset);
@@ -37,6 +47,10 @@ public class ManagedAssetServiceImpl implements ManagedAssetService {
 
     @Transactional
     public ManagedAsset save(ManagedAsset entity) {
+    	ResponseEntity<Account> account = accountsProxy.show(entity.getAccount().getId());
+    	ResponseEntity<AssetDetail> asset = assetsProxy.show(entity.getAsset().getId());
+    	entity.setAccount(account.getBody());
+    	entity.setAsset(asset.getBody());
         return managedAssetRepository.save(entity);
     }
 

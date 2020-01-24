@@ -5,13 +5,19 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.boot.actuate.health.Status;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 
+import brave.sampler.Sampler;
+
 @SpringBootApplication
+@EnableFeignClients("org.sample.capstone.proxy")
+@EnableDiscoveryClient
 public class ManagedAssetApplication {
 
 	public static void main(String[] args) {
@@ -29,6 +35,11 @@ public class ManagedAssetApplication {
 		};
 	}
 
+	@Bean
+	public Sampler defaultSampler() {
+		return Sampler.ALWAYS_SAMPLE;
+	}
+	
 	@RestController
 	public class HelloController {
 		@GetMapping("/hello")
