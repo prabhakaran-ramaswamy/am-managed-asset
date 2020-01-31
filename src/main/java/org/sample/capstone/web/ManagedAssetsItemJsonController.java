@@ -4,6 +4,8 @@ import javax.validation.Valid;
 
 import org.sample.capstone.entity.ManagedAsset;
 import org.sample.capstone.exception.NotFoundException;
+import org.sample.capstone.helper.ManagedAssetUtil;
+import org.sample.capstone.model.ManagedAssetModel;
 import org.sample.capstone.service.api.ManagedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -30,36 +32,38 @@ public class ManagedAssetsItemJsonController {
     private ManagedAssetService managedAssetService;
 
     @ModelAttribute
-    public ManagedAsset getManagedAsset(@PathVariable("managedAsset") Long id) {
+    public ManagedAssetModel getManagedAsset(@PathVariable("managedAsset") Long id) {
         ManagedAsset managedAsset = managedAssetService.findOne(id);
         if (managedAsset == null) {
             throw new NotFoundException(String.format("ManagedAsset with identifier '%s' not found", id));
         }
-        return managedAsset;
+        ManagedAssetModel managedAssetModel = ManagedAssetUtil.copyManagedAssetToManagedAssetModel(managedAsset);
+        return managedAssetModel;
     }
 
     @GetMapping(name = "show")
-    public ResponseEntity<?> show(@ModelAttribute ManagedAsset managedAsset) {
-        return ResponseEntity.ok(managedAsset);
+    public ResponseEntity<?> show(@ModelAttribute ManagedAssetModel managedAssetModel) {
+        return ResponseEntity.ok(managedAssetModel);
     }
 
-    public static UriComponents showURI(ManagedAsset managedAsset) {
-        return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(ManagedAssetsItemJsonController.class).show(managedAsset)).buildAndExpand(managedAsset.getId()).encode();
+    public static UriComponents showURI(ManagedAssetModel managedAssetModel) {
+        return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(ManagedAssetsItemJsonController.class).show(managedAssetModel)).buildAndExpand(managedAssetModel.getId()).encode();
     }
 
     @PutMapping(name = "update")
-    public ResponseEntity<?> update(@ModelAttribute ManagedAsset storedManagedAsset, @Valid @RequestBody ManagedAsset managedAsset, BindingResult result) {
+    public ResponseEntity<?> update(@ModelAttribute ManagedAssetModel storedManagedAsset, @Valid @RequestBody ManagedAssetModel managedAssetModel, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
+        ManagedAsset managedAsset = ManagedAssetUtil.copyManagedAssetModelToManagedAsset(managedAssetModel);
         managedAsset.setId(storedManagedAsset.getId());
         managedAssetService.save(managedAsset);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping(name = "delete")
-    public ResponseEntity<?> delete(@ModelAttribute ManagedAsset managedAsset) {
-        managedAssetService.delete(managedAsset);
+    public ResponseEntity<?> delete(@ModelAttribute ManagedAssetModel managedAsset) {
+        managedAssetService.delete(ManagedAssetUtil.copyManagedAssetModelToManagedAsset(managedAsset));
         return ResponseEntity.ok().build();
     }
 }
