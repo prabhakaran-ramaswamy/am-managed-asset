@@ -1,17 +1,12 @@
 package org.sample.capstone.web;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.validation.Valid;
 
 import org.sample.capstone.entity.ManagedAsset;
-import org.sample.capstone.helper.ManagedAssetUtil;
-import org.sample.capstone.model.ManagedAssetModel;
 import org.sample.capstone.service.api.ManagedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,11 +33,9 @@ public class ManagedAssetsCollectionJsonController {
 
    
     @GetMapping(name = "list")
-    public ResponseEntity<Page<ManagedAssetModel>> list(Pageable pageable) {
+    public ResponseEntity<Page<ManagedAsset>> list(Pageable pageable) {
         Page<ManagedAsset> managedAssets = managedAssetService.findAll(pageable);
-        List<ManagedAssetModel> managedAssetsModels = ManagedAssetUtil.copyManagedAssetsToManagedAssetModels(managedAssets.getContent());
-        Page<ManagedAssetModel> page = new PageImpl<>(managedAssetsModels, managedAssets.getPageable(), managedAssetsModels.size());
-        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(managedAssets);
     }
 
     public static UriComponents listURI() {
@@ -50,34 +43,33 @@ public class ManagedAssetsCollectionJsonController {
     }
 
     @PostMapping(name = "create")
-    public ResponseEntity<?> create(@Valid @RequestBody ManagedAssetModel managedAssetModel, BindingResult result) {
-        if (managedAssetModel.getId() != null) {
+    public ResponseEntity<?> create(@Valid @RequestBody ManagedAsset managedAsset, BindingResult result) {
+        if (managedAsset.getId() != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        ManagedAsset managedAsset = ManagedAssetUtil.copyManagedAssetModelToManagedAsset(managedAssetModel);
         ManagedAsset newManagedAsset = managedAssetService.save(managedAsset);
-        UriComponents showURI = ManagedAssetsItemJsonController.showURI(ManagedAssetUtil.copyManagedAssetToManagedAssetModel(newManagedAsset));
+        UriComponents showURI = ManagedAssetsItemJsonController.showURI(newManagedAsset);
         return ResponseEntity.created(showURI.toUri()).build();
     }
 
     @PostMapping(value = "/batch", name = "createBatch")
-    public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAssetModel> managedAssetModels, BindingResult result) {
+    public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        managedAssetService.save(ManagedAssetUtil.copyManagedAssetModelsToManagedAssets(new ArrayList<ManagedAssetModel>(managedAssetModels)));
+        managedAssetService.save(managedAssets);
         return ResponseEntity.created(listURI().toUri()).build();
     }
 
     @PutMapping(value = "/batch", name = "updateBatch")
-    public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAssetModel> managedAssetModels, BindingResult result) {
+    public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        managedAssetService.save(ManagedAssetUtil.copyManagedAssetModelsToManagedAssets(new ArrayList<ManagedAssetModel>(managedAssetModels)));
+        managedAssetService.save(managedAssets);
         return ResponseEntity.ok().build();
     }
 

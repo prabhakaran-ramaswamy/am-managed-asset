@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 
 
@@ -28,14 +28,14 @@ public class ManagedAsset implements Serializable {
     @Column(name = "MANAGED_ASSET_ID")
     private Long id;
 
+	@JsonBackReference(value="asset")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ASSET_ID")
-	//@Column(name="ASSET_ID")
     private AssetDetail asset;
     
+    @JsonBackReference(value="account")
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ACCOUNT_ID")
-	//@Column(name="ACCOUNT_ID")
     private Account account;
 
 	public Long getId() {

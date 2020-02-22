@@ -11,15 +11,14 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "account_detail")
@@ -53,9 +52,10 @@ public class Account implements Serializable{
 	@Size( max = 15)
 	private String mobile;
 
+	@JsonManagedReference(value="account")
 	@OneToMany(mappedBy = "account",
 	        cascade = CascadeType.ALL,
-	        orphanRemoval = true, fetch = FetchType.EAGER)
+	        fetch = FetchType.EAGER)
 	private Set<ManagedAsset> managedAssets = new HashSet<ManagedAsset>();
 
 	public Long getId() {
