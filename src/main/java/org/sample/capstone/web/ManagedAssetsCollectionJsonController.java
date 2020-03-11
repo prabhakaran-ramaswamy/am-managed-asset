@@ -3,7 +3,7 @@ import java.util.Collection;
 
 import javax.validation.Valid;
 
-import org.sample.capstone.entity.ManagedAsset;
+import org.sample.capstone.entity.ManagedAssetView;
 import org.sample.capstone.service.api.ManagedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -33,8 +33,8 @@ public class ManagedAssetsCollectionJsonController {
 
    
     @GetMapping(name = "list")
-    public ResponseEntity<Page<ManagedAsset>> list(Pageable pageable) {
-        Page<ManagedAsset> managedAssets = managedAssetService.findAll(pageable);
+    public ResponseEntity<Page<ManagedAssetView>> list(Pageable pageable) {
+        Page<ManagedAssetView> managedAssets = managedAssetService.findAll(pageable);
         return ResponseEntity.ok(managedAssets);
     }
 
@@ -43,20 +43,20 @@ public class ManagedAssetsCollectionJsonController {
     }
 
     @PostMapping(name = "create")
-    public ResponseEntity<?> create(@Valid @RequestBody ManagedAsset managedAsset, BindingResult result) {
+    public ResponseEntity<?> create(@Valid @RequestBody ManagedAssetView managedAsset, BindingResult result) {
         if (managedAsset.getId() != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
-        ManagedAsset newManagedAsset = managedAssetService.save(managedAsset);
+        ManagedAssetView newManagedAsset = managedAssetService.save(managedAsset);
         UriComponents showURI = ManagedAssetsItemJsonController.showURI(newManagedAsset);
         return ResponseEntity.created(showURI.toUri()).build();
     }
 
     @PostMapping(value = "/batch", name = "createBatch")
-    public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
+    public ResponseEntity<?> createBatch(@Valid @RequestBody Collection<ManagedAssetView> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
@@ -65,7 +65,7 @@ public class ManagedAssetsCollectionJsonController {
     }
 
     @PutMapping(value = "/batch", name = "updateBatch")
-    public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAsset> managedAssets, BindingResult result) {
+    public ResponseEntity<?> updateBatch(@Valid @RequestBody Collection<ManagedAssetView> managedAssets, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }

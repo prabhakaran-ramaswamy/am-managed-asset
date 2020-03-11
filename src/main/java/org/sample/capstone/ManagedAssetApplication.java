@@ -1,5 +1,6 @@
 package org.sample.capstone;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
@@ -48,11 +49,8 @@ public class ManagedAssetApplication {
 		}
 	}
 	
-	@Bean 
-	public RequestMappingHandlerAdapter objectMapper() {
-	   RequestMappingHandlerAdapter requestMappingHandlerAdapter =new RequestMappingHandlerAdapter();
-	   MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-	   requestMappingHandlerAdapter.getMessageConverters().add(mappingJackson2HttpMessageConverter);
-	   return requestMappingHandlerAdapter;
+	@Bean
+	public ModelMapper modelMapper() {
+	    return new ModelMapper();
 	}
 }

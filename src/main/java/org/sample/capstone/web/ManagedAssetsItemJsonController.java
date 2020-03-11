@@ -2,7 +2,7 @@ package org.sample.capstone.web;
 
 import javax.validation.Valid;
 
-import org.sample.capstone.entity.ManagedAsset;
+import org.sample.capstone.entity.ManagedAssetView;
 import org.sample.capstone.exception.NotFoundException;
 import org.sample.capstone.service.api.ManagedAssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +30,8 @@ public class ManagedAssetsItemJsonController {
     private ManagedAssetService managedAssetService;
 
     @ModelAttribute
-    public ManagedAsset getManagedAsset(@PathVariable("managedAsset") Long id) {
-        ManagedAsset managedAsset = managedAssetService.findOne(id);
+    public ManagedAssetView getManagedAsset(@PathVariable("managedAsset") Long id) {
+        ManagedAssetView managedAsset = managedAssetService.findOne(id);
         if (managedAsset == null) {
             throw new NotFoundException(String.format("ManagedAsset with identifier '%s' not found", id));
         }
@@ -39,16 +39,16 @@ public class ManagedAssetsItemJsonController {
     }
 
     @GetMapping(name = "show")
-    public ResponseEntity<?> show(@ModelAttribute ManagedAsset managedAsset) {
+    public ResponseEntity<?> show(@ModelAttribute ManagedAssetView managedAsset) {
         return ResponseEntity.ok(managedAsset);
     }
 
-    public static UriComponents showURI(ManagedAsset managedAsset) {
+    public static UriComponents showURI(ManagedAssetView managedAsset) {
         return MvcUriComponentsBuilder.fromMethodCall(MvcUriComponentsBuilder.on(ManagedAssetsItemJsonController.class).show(managedAsset)).buildAndExpand(managedAsset.getId()).encode();
     }
 
     @PutMapping(name = "update")
-    public ResponseEntity<?> update(@ModelAttribute ManagedAsset storedManagedAsset, @Valid @RequestBody ManagedAsset managedAsset, BindingResult result) {
+    public ResponseEntity<?> update(@ModelAttribute ManagedAssetView storedManagedAsset, @Valid @RequestBody ManagedAssetView managedAsset, BindingResult result) {
         if (result.hasErrors()) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(result);
         }
@@ -58,7 +58,7 @@ public class ManagedAssetsItemJsonController {
     }
 
     @DeleteMapping(name = "delete")
-    public ResponseEntity<?> delete(@ModelAttribute ManagedAsset managedAsset) {
+    public ResponseEntity<?> delete(@ModelAttribute ManagedAssetView managedAsset) {
         managedAssetService.delete(managedAsset);
         return ResponseEntity.ok().build();
     }
